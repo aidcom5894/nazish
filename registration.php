@@ -117,35 +117,35 @@ $insertData = mysqli_query($config,"INSERT INTO admin_register(username,email,pa
 if(isset($_POST['registerUser']))
 {		    
 	if($insertData)
-	{
-		echo "<script>alert('Data Inserted Successfully')</script>";
-		try {
-	    //Server settings
-	    $mail->SMTPDebug = false;                      //Enable verbose debug output
-	    $mail->isSMTP();                                            //Send using SMTP
-	    $mail->Host       = 'smtp.sendgrid.net';                     //Set the SMTP server to send through
-	    $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-	    $mail->Username   = 'apikey';                     //SMTP username
-	    $mail->Password   = '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';                               //SMTP password
-	    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-	    $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set 
+	// {
+	// 	echo "<script>alert('Data Inserted Successfully')</script>";
+	// 	try {
+	//     //Server settings
+	//     $mail->SMTPDebug = false;                      //Enable verbose debug output
+	//     $mail->isSMTP();                                            //Send using SMTP
+	//     $mail->Host       = 'smtp.sendgrid.net';                     //Set the SMTP server to send through
+	//     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+	//     $mail->Username   = 'apikey';                     //SMTP username
+	//     $mail->Password   = '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';                               //SMTP password
+	//     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
+	//     $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set 
 
-	    //Recipients
-	    $mail->setFrom('support@aidcom.in', 'OTP Verification');
-	    $mail->addAddress($email);    						 //Add a recipient
-	    $mail->addAddress('nazish@aidcom.in');               //Name is optional
-	    $mail->addBCC('robinkujur@aidcom.in');				 //Name is optional
+	//     //Recipients
+	//     $mail->setFrom('support@aidcom.in', 'OTP Verification');
+	//     $mail->addAddress($email);    						 //Add a recipient
+	//     $mail->addAddress('nazish@aidcom.in');               //Name is optional
+	//     $mail->addBCC('robinkujur@aidcom.in');				 //Name is optional
 
-	    //Content
-	    $mail->isHTML(true);                                  //Set email format to HTML
-	    $mail->Subject = 'OTP Verification';
-	    $mail->Body    = $msgBody ;
-	     $mail->send();
-	    echo 'Message has been sent';
-	    } catch (Exception $e) {
-	        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-	    }
-	}
+	//     //Content
+	//     $mail->isHTML(true);                                  //Set email format to HTML
+	//     $mail->Subject = 'OTP Verification';
+	//     $mail->Body    = $msgBody ;
+	//      $mail->send();
+	//     echo 'Message has been sent';
+	//     } catch (Exception $e) {
+	//         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+	//     }
+	// }
 
 	
 
