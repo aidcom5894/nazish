@@ -5,11 +5,7 @@ include('master_page/sidebar.php');
 include('master_page/navbar.php');
 
 ?>
-
-
-
-
-      
+    
 
       <!-- Content wrapper -->
       <div class="content-wrapper">

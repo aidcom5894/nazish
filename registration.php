@@ -2,21 +2,7 @@
 
 include('config.php');
 
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
-use PHPMailer\PHPMailer\Exception;
-
-
-//Load Composer's autoloader
-require 'vendor/autoload.php';
-
-//Create an instance; passing `true` enables exceptions
-$mail = new PHPMailer(true);
-
-
 ?>
-
-
 
 <!doctype html>
 <html lang="en">
@@ -28,7 +14,20 @@ $mail = new PHPMailer(true);
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="stylesheet" href="modules/uitemplate/css/style.css">
 
+<script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/iconify/2.0.0/iconify.min.js"> </script>
+
+<style type="text/css">
+	input[type=number]::-webkit-inner-spin-button, 
+	input[type=number]::-webkit-outer-spin-button { 
+	    -webkit-appearance: none;
+	    -moz-appearance: none;
+	    appearance: none;
+	    margin: 0; 
+	}
+</style>
+
 </head>
 
 <body class="img js-fullheight" style="background-image: url(modules/uitemplate/images/bg.jpg);">
@@ -47,20 +46,22 @@ $mail = new PHPMailer(true);
 
 <form class="signin-form" method="POST">
 <div class="form-group">
-<input type="text" class="form-control" placeholder="Username" required name="username">
+<input type="text" class="form-control" placeholder="Username" name="username" required="">
 </div>
 
 <div class="form-group">
-<input type="email" class="form-control" placeholder="Email_id" required name="useremail">
+<input type="email" class="form-control" placeholder="Email_id" name="useremail" required="">
 </div>
 
 <div class="form-group">
-<input id="password-field" type="password" class="form-control" placeholder="Password" required name="password">
+<input id="password-field" type="password" class="form-control" placeholder="Password" name="password" required="">
 <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
 </div>
 
 <div class="form-group">
-<input type="number" class="form-control" placeholder="Contact" required name="contact">
+<input type="number" class="form-control" placeholder="Contact" name="contact" required="" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+    type = "number"
+    maxlength = "10">
 </div>
 
 <div class="form-group">
@@ -80,6 +81,7 @@ $mail = new PHPMailer(true);
 </div>
 </div>
 </form>
+
 <p class="w-100 text-center">&mdash; Or Back to Home &mdash;</p>
 <div class="social d-flex text-center">
 <a href="<?php echo $base_address; ?>" class="px-2 py-2 ml-md-1 rounded"><span class="ion-logo-twitter mr-2"><svg xmlns="http://www.w3.org/2000/svg" width="1.2rem" height="1.2rem" viewBox="0 0 24 24"><path fill="#32398f" d="M10 20v-6h4v6h5v-8h3L12 3L2 12h3v8z"/></svg></span> Home</a>
@@ -100,56 +102,56 @@ $mail = new PHPMailer(true);
 
 <?php 
 
+
 $username = $_POST['username'];
 $email = $_POST['useremail'];
 $password = $_POST['password'];
 $contact = $_POST['contact'];
 
 $authCodeString = '67890ABCDEFGH12345IJKLMOPQRSTUVWXYZ';
-
 $authCode = str_shuffle(substr($authCodeString,1,6));
 
-$msgBody = "Dear <b>$username</b> Your OTP Verification code is <b>$authCode</b><br> Please provide the Code in the  Verification Section to get access to the Dashboard.";
+$imageFolder = "assets/avatar/";
 
-$insertData = mysqli_query($config,"INSERT INTO admin_register(username,email,password,contact,authentication_code,address,security_qns1,profile_status) VALUES('$username','$email','$password','$contact','$authCode','to be updated','to be updated','Pending')");
+$avatar_location = array("avatar1.png","avatar3.png","avatar2.png","avatar4.png","avatar5.png","avatar6.png","avatar7.png","avatar8.png","avatar9.png","avatar10.png","avatar11.png","avatar12.png","avatar13.png","avatar14.png","avatar15.png","avatar16.png","avatar17.png","avatar18.png","avatar19.png","avatar20.png");
+$photo = $base_address.$imageFolder.$avatar_location[array_rand($avatar_location,1)];
 
+$checkExistingEntry = mysqli_query($config,"SELECT * FROM admin_register WHERE email = '$email' OR contact = '$contact' ");
 
-if(isset($_POST['registerUser']))
-{		    
-	if($insertData)
-	// {
-	// 	echo "<script>alert('Data Inserted Successfully')</script>";
-	// 	try {
-	//     //Server settings
-	//     $mail->SMTPDebug = false;                      //Enable verbose debug output
-	//     $mail->isSMTP();                                            //Send using SMTP
-	//     $mail->Host       = 'smtp.sendgrid.net';                     //Set the SMTP server to send through
-	//     $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-	//     $mail->Username   = 'apikey';                     //SMTP username
-	//     $mail->Password   = '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';                               //SMTP password
-	//     $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-	//     $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set 
+	if(isset($_POST['registerUser']))
+	{
+		if(mysqli_num_rows($checkExistingEntry)>0)
+		{
+		  echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
+		  echo '<script type="text/javascript">';
+		  echo 'setTimeout(function () {';
+		  echo 'swal("Duplicate Entry Found!","We have found same email or contact registered with some another account. To avoid data redundancy we do not allow same email or contact to register again. Please login with the credentials to access the portal","error").then(function() {';
+		  echo 'window.location.href = "signin.php";';
+		  echo '});';
+		  echo '}, 100);';
+		  echo '</script>';
+		}
+		else
+		{
 
-	//     //Recipients
-	//     $mail->setFrom('support@aidcom.in', 'OTP Verification');
-	//     $mail->addAddress($email);    						 //Add a recipient
-	//     $mail->addAddress('nazish@aidcom.in');               //Name is optional
-	//     $mail->addBCC('robinkujur@aidcom.in');				 //Name is optional
+			session_start();
+			$_SESSION['loggedinUser'] = $email;
+			mysqli_query($config,"INSERT INTO admin_register(username,email,password,contact,authentication_code,address,security_qns1,security_ans,profile_status,profile_picture) VALUES('$username','$email','$password','$contact','$authCode','to_be_updated','to_be_updated','to_be_updated','Pending','$photo')");
 
-	//     //Content
-	//     $mail->isHTML(true);                                  //Set email format to HTML
-	//     $mail->Subject = 'OTP Verification';
-	//     $mail->Body    = $msgBody ;
-	//      $mail->send();
-	//     echo 'Message has been sent';
-	//     } catch (Exception $e) {
-	//         echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-	//     }
-	// }
-
+		  echo '<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>';
+		  echo '<script type="text/javascript">';
+		  echo 'setTimeout(function () {';
+		  echo 'swal("Registration Successful","We are happy to have you onboard. Please login with the credentials to access your potal. We welcome you onboard. Happy Surfing!","success").then(function() {';
+		  echo 'window.location.href = "verification.php";';
+		  echo '});';
+		  echo '}, 100);';
+		  echo '</script>';
+		}
+		
 	
 
-}
+	}
+
 
 
 ?>
